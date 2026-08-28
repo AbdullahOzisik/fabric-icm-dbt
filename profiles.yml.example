@@ -1,0 +1,34 @@
+# Voorbeeld profile voor dit dbt-project.
+# Kopieer dit bestand naar je lokale dbt-profielenmap (meestal ~/.dbt/profiles.yml)
+# en vul de echte waarden in. Zet dit .example bestand niet met echte secrets in git.
+
+fabric_icm_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: fabric
+      driver: 'ODBC Driver 18 for SQL Server'
+      server: <your-fabric-sql-endpoint>.datawarehouse.fabric.microsoft.com
+      port: 1433
+      database: <your-fabric-warehouse-name>
+      schema: dbo
+      authentication: ActiveDirectoryInteractive  # of ServicePrincipal / ActiveDirectoryPassword
+      # Voor ServicePrincipal-authenticatie (bv. CI/CD):
+      # authentication: ServicePrincipal
+      # client_id: <client-id>
+      # client_secret: <client-secret>
+      # tenant_id: <tenant-id>
+      threads: 4
+
+    prod:
+      type: fabric
+      driver: 'ODBC Driver 18 for SQL Server'
+      server: <your-fabric-sql-endpoint>.datawarehouse.fabric.microsoft.com
+      port: 1433
+      database: <your-fabric-warehouse-name>
+      schema: dbo
+      authentication: ServicePrincipal
+      client_id: <client-id>
+      client_secret: <client-secret>
+      tenant_id: <tenant-id>
+      threads: 8

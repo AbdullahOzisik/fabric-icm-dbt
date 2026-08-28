@@ -1,0 +1,21 @@
+# dbt
+target/
+dbt_packages/
+logs/
+package-lock.yml
+
+# Python / venv
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets - nooit echte profiles.yml committen
+profiles.yml
+
+# Editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
