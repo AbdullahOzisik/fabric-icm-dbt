@@ -4,6 +4,9 @@ dbt_packages/
 logs/
 package-lock.yml
 
+# Ruwe brondata - te groot voor git, wordt apart naar Fabric geladen
+raw_data/
+
 # Python / venv
 .venv/
 __pycache__/

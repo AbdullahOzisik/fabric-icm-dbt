@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: stg_rdw__vehicles
+    description: "Schone, hernoemde en getypeerde laag bovenop de ruwe RDW voertuigdata."
+    columns:
+      - name: vehicle_source_id
+        description: "Uniek record-id uit de RDW open data bron."
+        tests:
+          - unique
+          - not_null
+      - name: license_plate
+        description: "Kenteken van het voertuig."
+        tests:
+          - not_null
+      - name: brand
+        description: "Merk van het voertuig."
