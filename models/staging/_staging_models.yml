@@ -1,0 +1,83 @@
+version: 2
+
+models:
+  - name: stg_klant
+    columns:
+      - name: klant_id
+        tests: [unique, not_null]
+  - name: stg_concern
+    columns:
+      - name: concern_id
+        tests: [unique, not_null]
+  - name: stg_vestiging
+    columns:
+      - name: vestiging_id
+        tests: [unique, not_null]
+  - name: stg_medewerker
+    columns:
+      - name: medewerker_id
+        tests: [unique, not_null]
+  - name: stg_secuser
+    columns:
+      - name: secuser_id
+        tests: [unique, not_null]
+  - name: stg_klantartikel
+    columns:
+      - name: klantartikel_id
+        tests: [unique, not_null]
+  - name: stg_klantartikelgroep
+    columns:
+      - name: klantartikelgroep_id
+        tests: [unique, not_null]
+  - name: stg_etiket
+    columns:
+      - name: etiket_id
+        tests: [unique, not_null]
+  - name: stg_formaatgroep
+    columns:
+      - name: formaatgroep_id
+        tests: [unique, not_null]
+  - name: stg_droogtechniek
+    columns:
+      - name: droogtechniek_id
+        tests: [unique, not_null]
+  - name: stg_artikelpapier
+    columns:
+      - name: artikelpapier_id
+        tests: [unique, not_null]
+  - name: stg_tussensnee
+    columns:
+      - name: tussensnee_id
+        tests: [unique, not_null]
+  - name: stg_bewerkingscenario
+    columns:
+      - name: bewerkingscenario_id
+        tests: [unique, not_null]
+  - name: stg_bewerkingscenariogroep
+    columns:
+      - name: bewerkingscenariogroep_id
+        tests: [unique, not_null]
+  - name: stg_verkooporder
+    columns:
+      - name: verkooporder_id
+        tests: [unique, not_null]
+      - name: klant_id
+        tests: [not_null]
+  - name: stg_verkooporderregel
+    columns:
+      - name: verkooporderregel_id
+        tests: [unique, not_null]
+      - name: verkooporder_id
+        tests: [not_null]
+  - name: stg_budgetbucket
+    columns:
+      - name: budgetbucket_id
+        tests: [unique, not_null]
+  - name: stg_budget_intake
+    columns:
+      - name: klant_id
+        tests: [not_null]
+  - name: stg_d_datum
+    columns:
+      - name: datum
+        tests: [unique, not_null]

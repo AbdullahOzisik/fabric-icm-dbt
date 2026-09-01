@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: int_actual_omzet_maand
+    description: "Actuele intake omzet per klant/jaar/maand, uit verkooporder + verkooporderregel."
+  - name: rpt_intake_omzet_vs_budget
+    description: >
+      Vergelijking van actuele intake omzet tegen Budget en Latest Estimate,
+      per klant/jaar/maand - het centrale rapportmodel voor de klantdemo.
+    columns:
+      - name: klant_id
+        tests: [not_null]
