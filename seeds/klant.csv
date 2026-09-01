@@ -1,0 +1,11 @@
+klant_id,klant_nummer,klant_naam,concern_id,vestiging_id,accountmanager_id,actief
+1,K1001,Alpha Retail,1,1,1,True
+2,K1002,Beta Foods,1,1,2,True
+3,K1003,Gamma Drinks,2,2,3,True
+4,K1004,Delta Care,2,2,1,True
+5,K1005,Epsilon Home,3,3,2,True
+6,K1006,Zeta Pharma,3,3,3,True
+7,K1007,Eta Foods,4,1,1,True
+8,K1008,Theta Retail,4,2,2,True
+9,K1009,Iota Beverages,5,3,3,True
+10,K1010,Kappa Services,5,1,1,True

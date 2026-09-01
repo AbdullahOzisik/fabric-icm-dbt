@@ -1,0 +1,5 @@
+secuser_id,medewerker_id,gebruikersnaam,rol
+1,1,sdevries,Sales
+2,2,mjansen,Sales
+3,3,nbakker,Sales
+4,4,tsmit,Manager

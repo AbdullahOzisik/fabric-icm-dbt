@@ -1,0 +1,6 @@
+bewerkingscenario_id,bewerkingscenariogroep_id,scenario_naam
+1,1,Print
+2,1,Print + Laminaat
+3,2,Print + Stans
+4,2,Print + Lak
+5,3,Multi-step

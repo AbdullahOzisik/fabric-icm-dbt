@@ -44,3 +44,11 @@ dbt-project voor ICM op Microsoft Fabric (Fabric Warehouse / Synapse Data Wareho
 ## Adapter
 
 Dit project gebruikt [`dbt-fabric`](https://github.com/microsoft/dbt-fabric), de officiële Microsoft-adapter voor Microsoft Fabric Data Warehouse / Azure Synapse Data Warehouse. dbt-core en dbt-fabric zijn beide gratis en open source.
+
+## CI/CD & orchestration
+
+- **CI**: `.github/workflows/ci.yml` (GitHub Actions) - draait `dbt parse` op elke PR, en `dbt seed` + `dbt build` tegen een dev/test Fabric warehouse zodra de `FABRIC_*` secrets in GitHub Secrets staan.
+- **Orchestration**: productie-/geplande runs lopen via een Fabric Data Pipeline (Notebook-activiteit + schedule trigger), niet via GitHub Actions.
+- **Datalake-ingest**: bronbestanden landen in een Fabric Lakehouse en komen via een OneLake shortcut als `raw`-schema het Warehouse binnen, waar dbt op leest.
+
+Volledige opzetstappen (Key Vault, service principal, pipeline, shortcuts) staan in [`orchestration/README.md`](orchestration/README.md).

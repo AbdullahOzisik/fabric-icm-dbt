@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+env:
+  DBT_PROFILES_DIR: ${{ github.workspace }}/profiles
+
+jobs:
+  dbt-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: dbt deps
+        run: dbt deps
+
+      - name: dbt parse (syntax/config check, geen Fabric-verbinding nodig)
+        run: dbt parse
+
+      - name: Check of Fabric-secrets geconfigureerd zijn
+        id: check_secrets
+        run: echo "has_secrets=${{ secrets.FABRIC_SERVER != '' }}" >> "$GITHUB_OUTPUT"
+
+      - name: Install ODBC Driver 18 for SQL Server
+        if: steps.check_secrets.outputs.has_secrets == 'true'
+        run: |
+          curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
+          curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
+          sudo apt-get update
+          ACCEPT_EULA=Y sudo apt-get install -y msodbcsql18
+
+      - name: dbt seed + build tegen Fabric (dev/test warehouse)
+        if: steps.check_secrets.outputs.has_secrets == 'true'
+        env:
+          FABRIC_SERVER: ${{ secrets.FABRIC_SERVER }}
+          FABRIC_DATABASE: ${{ secrets.FABRIC_DATABASE }}
+          FABRIC_SCHEMA: ci_pr_${{ github.event.pull_request.number || github.run_id }}
+          FABRIC_CLIENT_ID: ${{ secrets.FABRIC_CLIENT_ID }}
+          FABRIC_CLIENT_SECRET: ${{ secrets.FABRIC_CLIENT_SECRET }}
+          FABRIC_TENANT_ID: ${{ secrets.FABRIC_TENANT_ID }}
+        run: |
+          dbt seed
+          dbt build
+
+      - name: Fabric-secrets nog niet geconfigureerd
+        if: steps.check_secrets.outputs.has_secrets != 'true'
+        run: |
+          echo "::notice::FABRIC_* secrets staan nog niet in GitHub Secrets - dbt parse is uitgevoerd, de live dbt build tegen Fabric is overgeslagen. Zie orchestration/README.md om dit te koppelen."
