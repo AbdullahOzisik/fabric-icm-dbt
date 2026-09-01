@@ -10,3 +10,12 @@ models:
     columns:
       - name: klant_id
         tests: [not_null]
+  - name: rpt_top_klanten
+    description: "Klanten gerangschikt op totale actuele omzet, met concern/vestiging/accountmanager."
+    columns:
+      - name: klant_id
+        tests: [unique, not_null]
+  - name: rpt_omzet_per_klantartikelgroep
+    description: "Actuele omzet per klantartikelgroep en jaar - welke productcategorieën presteren."
+  - name: rpt_omzet_per_vestiging
+    description: "Actuele omzet per vestiging en jaar - regionaal beeld."
