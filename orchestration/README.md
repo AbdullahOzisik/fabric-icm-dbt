@@ -8,25 +8,30 @@ een Fabric-workspace + service principal beschikbaar is.
 
 ## Architectuurplaat
 
+Live opzet in de dev-workspace ("DEV"):
+
 ```
-bronsystemen / sample data
+bronsystemen / sample CSV's
         |
         v
-Fabric Lakehouse  (Files/landing/<bron>/ -> Tables/raw_<bron>)
-        |  OneLake Shortcut (geen data-kopie)
+Lakehouse "Landing_bron_data"  (Tables/dbo/<tabel>, Delta)
+        |  Fabric cross-database query (workspace-niveau, geen kopie/shortcut)
         v
-Fabric Warehouse  (schema "raw")  <-- dit is waar dbt op verbindt
+Warehouse "dbt_raw"  <-- dbt verbindt hierop (profiles.yml database: dbt_raw)
         |
-        v  dbt source() -> staging (views) -> marts (tables)
-Fabric Warehouse  (schema "staging", "marts")
+        v  dbt source('raw', ...) -> staging (views) -> marts (tables)
+Warehouse "dbt_raw"  (schema "staging", "marts")
 ```
 
-Voor de demo/lokale ontwikkeling is er een kortere route: de sample-CSV's in
-`seeds/` gaan via `dbt seed` rechtstreeks het Warehouse in, zonder Lakehouse.
-Zodra de Lakehouse-laag live staat, vervang je in de staging-modellen de
-`ref()`/seed-tabellen door `source()`-verwijzingen naar het `raw`-schema
-(zie `models/staging/_sources.yml.example` als startpunt - hernoem naar
-`.yml` zodra het schema echt bestaat).
+`models/staging/_sources.yml` wijst met `database: Landing_bron_data` /
+`schema: dbo` naar de Lakehouse-tabellen; dbt genereert daarmee automatisch
+drie-delige namen (`[Landing_bron_data].[dbo].[tabel]`) die Fabric's
+cross-database querying ondersteunt vanuit het Warehouse `dbt_raw` - geen
+shortcuts nodig zolang Lakehouse en Warehouse in dezelfde workspace staan.
+
+Voor lokale/offline demo's blijft er ook een kortere route: de sample-CSV's
+in `seeds/` gaan via `dbt seed` rechtstreeks het Warehouse in, zonder de
+Lakehouse-laag.
 
 ## 1. CI/CD - GitHub Actions
 
@@ -82,9 +87,10 @@ Opzet in de Fabric portal (eenmalig, via de UI):
    - Een **Schedule trigger** (bv. dagelijks 06:00) op de pipeline.
    - Optioneel: een failure-notificatie (Teams/e-mail-activiteit) na de
      Notebook-activiteit, alleen bij falen.
-4. **Lakehouse -> Warehouse**: maak in het Warehouse OneLake Shortcuts aan
-   naar de Delta-tabellen in de Lakehouse (`raw_<bron>`), zodat dbt ze als
-   gewone tabellen in schema `raw` ziet zonder data te dupliceren.
+4. **Lakehouse -> Warehouse**: geen actie nodig - Fabric's cross-database
+   querying laat het Warehouse `dbt_raw` rechtstreeks bij de Lakehouse-tabellen
+   in `Landing_bron_data.dbo.*` zolang beide in dezelfde workspace staan
+   (zie `models/staging/_sources.yml`).
 
 ## 3. Van demo naar live
 
@@ -94,5 +100,5 @@ Om dit project echt tegen een klant-Fabric-omgeving te laten draaien:
 2. Vul `~/.dbt/profiles.yml` lokaal in (zie hoofd-README) voor handmatig werk.
 3. Zet de 5 GitHub Secrets voor CI.
 4. Doorloop de Fabric-portalstappen hierboven voor de Data Pipeline.
-5. Vervang de seed-gebaseerde staging-modellen door `source()`-verwijzingen
-   zodra de Lakehouse-laag/shortcuts staan.
+5. Bouw de staging-modellen op `source('raw', ...)` (zie
+   `models/staging/_sources.yml`) in plaats van de seed-tabellen.

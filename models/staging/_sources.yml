@@ -1,16 +1,14 @@
-# Template voor zodra de Lakehouse-laag + OneLake shortcuts live staan
-# (zie orchestration/README.md). Hernoem naar "_sources.yml" op het moment
-# dat schema "raw" echt bestaat in het Fabric warehouse - tot die tijd
-# gebruiken de staging-modellen gewoon ref() naar de seeds.
 version: 2
 
 sources:
   - name: raw
     description: >
-      Landingszone-tabellen, via een OneLake shortcut zichtbaar in het
-      Fabric warehouse. Gevuld door de Fabric Data Pipeline (copy + notebook,
-      zie orchestration/README.md) vanuit de brondata.
-    schema: raw
+      Landingszone-tabellen in de Lakehouse "Landing_bron_data" (dev-workspace).
+      dbt verbindt met het Warehouse "dbt_raw" en leest deze tabellen via
+      Fabric's cross-database querying (workspace-niveau) rechtstreeks uit de
+      Lakehouse - geen shortcuts of kopie nodig. Zie orchestration/README.md.
+    database: Landing_bron_data
+    schema: dbo
     tables:
       - name: klant
       - name: concern
