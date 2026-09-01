@@ -3,6 +3,7 @@ target/
 dbt_packages/
 logs/
 package-lock.yml
+.user.yml
 
 # Ruwe brondata - te groot voor git, wordt apart naar Fabric geladen
 raw_data/
