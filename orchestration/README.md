@@ -33,6 +33,15 @@ Voor lokale/offline demo's blijft er ook een kortere route: de sample-CSV's
 in `seeds/` gaan via `dbt seed` rechtstreeks het Warehouse in, zonder de
 Lakehouse-laag.
 
+**Als de trial-capacity de Spark-sessie van het notebook niet start** (typisch
+"Session error or stopped" op een uitgeputte/gethrottelde trial-capacity):
+gebruik `orchestration/copy_into_dbt_raw.sql` als Spark-vrij alternatief. Dat
+script laadt de CSV's met `COPY INTO` (T-SQL) rechtstreeks in schema `raw`
+van het Warehouse `dbt_raw` zelf, zonder Lakehouse/Spark. Bij gebruik van dit
+alternatief: verwijder `database: Landing_bron_data` uit
+`models/staging/_sources.yml` (de tabellen staan dan al in dezelfde database
+als waar dbt op verbindt).
+
 ## 1. CI/CD - GitHub Actions
 
 `.github/workflows/ci.yml` draait op elke PR en push naar `main`:
