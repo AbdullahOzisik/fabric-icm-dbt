@@ -13,8 +13,9 @@ raw_data/
 __pycache__/
 *.pyc
 
-# Secrets - nooit echte profiles.yml committen
-profiles.yml
+# Secrets - nooit een echte, met secrets ingevulde profiles.yml op de root committen.
+# (profiles/profiles.yml is wel getrackt - dat is het secret-vrije CI-profiel.)
+/profiles.yml
 
 # Editor
 .vscode/

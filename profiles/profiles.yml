@@ -1,0 +1,20 @@
+# CI-profiel voor dit dbt-project.
+# Bevat GEEN secrets - alle gevoelige waarden komen uit environment variables
+# (in GitHub Actions gevuld vanuit GitHub Secrets, zie .github/workflows/ci.yml).
+# Dit bestand mag met git meegaan.
+
+fabric_icm_dbt:
+  target: ci
+  outputs:
+    ci:
+      type: fabric
+      driver: 'ODBC Driver 18 for SQL Server'
+      server: "{{ env_var('FABRIC_SERVER', 'not-configured.datawarehouse.fabric.microsoft.com') }}"
+      port: 1433
+      database: "{{ env_var('FABRIC_DATABASE', 'not_configured') }}"
+      schema: "{{ env_var('FABRIC_SCHEMA', 'ci') }}"
+      authentication: ServicePrincipal
+      client_id: "{{ env_var('FABRIC_CLIENT_ID', 'not-configured') }}"
+      client_secret: "{{ env_var('FABRIC_CLIENT_SECRET', 'not-configured') }}"
+      tenant_id: "{{ env_var('FABRIC_TENANT_ID', 'not-configured') }}"
+      threads: 4
