@@ -24,3 +24,10 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# Terraform (.terraform.lock.hcl blijft wel getrackt, zoals gebruikelijk)
+infra/.terraform/
+infra/*.tfstate
+infra/*.tfstate.*
+infra/terraform.tfvars
+infra/*.tfplan

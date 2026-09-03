@@ -52,3 +52,7 @@ Dit project gebruikt [`dbt-fabric`](https://github.com/microsoft/dbt-fabric), de
 - **Datalake-ingest**: bronbestanden landen in een Fabric Lakehouse en komen via een OneLake shortcut als `raw`-schema het Warehouse binnen, waar dbt op leest.
 
 Volledige opzetstappen (Key Vault, service principal, pipeline, shortcuts) staan in [`orchestration/README.md`](orchestration/README.md).
+
+## Infrastructure as code
+
+De Fabric-workspaces (dev/test/prod), Lakehouse en Warehouse zelf worden geprovisioned via Terraform in [`infra/`](infra/) (los van dit dbt-project, zelfde repo). Zie [`infra/README.md`](infra/README.md) voor vereisten en gebruik; `.github/workflows/terraform.yml` valideert (`fmt`/`validate`/`plan`) op elke PR die `infra/**` raakt - `apply` blijft bewust handmatig.

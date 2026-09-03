@@ -1,0 +1,20 @@
+# Kopieer naar terraform.tfvars en vul in. Dit .example bestand bevat geen
+# secrets en mag met git mee; terraform.tfvars zelf staat in .gitignore.
+#
+# fabric_client_id / fabric_client_secret / fabric_tenant_id geef je bij
+# voorkeur mee via omgevingsvariabelen i.p.v. dit bestand:
+#   $env:TF_VAR_fabric_client_id     = "..."
+#   $env:TF_VAR_fabric_client_secret = "..."
+#   $env:TF_VAR_fabric_tenant_id     = "..."
+
+capacity_name = "<naam-van-je-fabric-capacity>"
+
+environments = {
+  dev  = "fabric-icm-dbt-dev"
+  test = "fabric-icm-dbt-test"
+  prod = "fabric-icm-dbt-prod"
+}
+
+workspace_admin_principal_ids = [
+  # "<object-id-van-je-eigen-gebruiker-of-service-principal>",
+]

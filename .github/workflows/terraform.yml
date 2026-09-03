@@ -1,0 +1,53 @@
+name: Terraform (infra)
+
+on:
+  pull_request:
+    branches: [main]
+    paths: ["infra/**"]
+  push:
+    branches: [main]
+    paths: ["infra/**"]
+
+defaults:
+  run:
+    working-directory: infra
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.14.5"
+
+      - name: terraform fmt -check
+        run: terraform fmt -check -diff
+
+      - name: terraform init
+        run: terraform init -backend=false
+
+      - name: terraform validate
+        run: terraform validate
+
+      - name: Check of Fabric-secrets geconfigureerd zijn
+        id: check_secrets
+        run: echo "has_secrets=${{ secrets.FABRIC_CLIENT_ID != '' && secrets.FABRIC_CAPACITY_NAME != '' }}" >> "$GITHUB_OUTPUT"
+
+      - name: terraform plan (alleen ter info, geen apply)
+        if: steps.check_secrets.outputs.has_secrets == 'true'
+        env:
+          TF_VAR_fabric_client_id: ${{ secrets.FABRIC_CLIENT_ID }}
+          TF_VAR_fabric_client_secret: ${{ secrets.FABRIC_CLIENT_SECRET }}
+          TF_VAR_fabric_tenant_id: ${{ secrets.FABRIC_TENANT_ID }}
+          TF_VAR_capacity_name: ${{ secrets.FABRIC_CAPACITY_NAME }}
+        run: terraform plan -no-color
+
+      - name: Fabric-secrets nog niet geconfigureerd
+        if: steps.check_secrets.outputs.has_secrets != 'true'
+        run: |
+          echo "::notice::FABRIC_CLIENT_ID/FABRIC_CAPACITY_NAME secrets nog niet gezet - fmt/init/validate zijn uitgevoerd, 'terraform plan' is overgeslagen."
+
+  # 'terraform apply' draait bewust NIET in CI - infra-wijzigingen worden
+  # handmatig toegepast (zie infra/README.md), niet automatisch bij een merge.
