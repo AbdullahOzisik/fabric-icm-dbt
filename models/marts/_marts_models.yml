@@ -16,6 +16,18 @@ models:
       - name: klant_id
         tests: [unique, not_null]
   - name: rpt_omzet_per_klantartikelgroep
-    description: "Actuele omzet per klantartikelgroep en jaar - welke productcategorieën presteren."
+    description: >
+      Actuele omzet per klant, klantartikelgroep en jaar - welke productcategorieën
+      presteren, met klant_id/klant_naam erbij zodat dit in Power BI op klant
+      gekoppeld/gefilterd kan worden met de andere marts.
+    columns:
+      - name: klant_id
+        tests: [not_null]
   - name: rpt_omzet_per_vestiging
-    description: "Actuele omzet per vestiging en jaar - regionaal beeld."
+    description: >
+      Actuele omzet per klant, vestiging en jaar - regionaal beeld, met
+      klant_id/klant_naam erbij zodat dit in Power BI op klant gekoppeld/gefilterd
+      kan worden met de andere marts.
+    columns:
+      - name: klant_id
+        tests: [not_null]
